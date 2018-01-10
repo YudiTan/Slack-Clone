@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import path from 'path';
+import cors from 'cors';
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
 import { makeExecutableSchema } from 'graphql-tools';
 import models from './models';
@@ -16,6 +17,7 @@ const schema = makeExecutableSchema({
 });
 
 const app = express();
+app.use(cors('*'));
 
 const graphqlEndpoint = '/graphql'
 
@@ -31,4 +33,3 @@ app.use(graphqlEndpoint, bodyParser.json(), graphqlExpress({ schema, context: {
 models.sequelize.sync().then(()=> {
     app.listen(8080);
 })
-
